@@ -1,7 +1,7 @@
 from flask import current_app as app
 from flask import redirect, render_template, request, session
 from .models import (
-    CAUVapp,
+    CAUVApp,
     Parcels,
     Homesite,
     CRP,
@@ -9,10 +9,8 @@ from .models import (
     ERRORS,
 )
 from .check import check
+from . import db
 
-@app.route('/')
-def base():
-    table_views = []
-    for x in range(0,4000):
-        table_views.append(check(x))
-    return table_views
+@app.route('/<int:id>')
+def base(id):
+    return check(id)
