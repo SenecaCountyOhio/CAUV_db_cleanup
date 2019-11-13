@@ -88,4 +88,4 @@ def import_to_model(directory):
                     db.session.add(app)
                     db.session.commit()
 
-import_to_model('B:\\Projects\\CAUV\\2020\\Database Cleanup\\automation app')
+import_to_model('B:\\Projects\\CAUV\\2020\\Database Cleanup\\automation app\\data')
