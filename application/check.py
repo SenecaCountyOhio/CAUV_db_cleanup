@@ -68,6 +68,28 @@ def check(x):
     check_dict['APP_VALUES']['Gross_Income_2'] = model_CAUVApp.Gross_Income_2
     check_dict['APP_VALUES']['Gross_Income_3'] = model_CAUVApp.Gross_Income_3
 
+    # CALCULATE TOTAL SUBMITTED ACRES IN APP
+    app_total = [
+        check_dict['APP_VALUES']['Commodity_Acres'],
+        check_dict['APP_VALUES']['Hay_Acres'],
+        check_dict['APP_VALUES']['Perm_Pasture_Acres'],
+        check_dict['APP_VALUES']['Noncommercial_Wood_Acres'],
+        check_dict['APP_VALUES']['Commerical_Wood_Acres'],
+        check_dict['APP_VALUES']['Other_Crop_Acres'],
+        check_dict['APP_VALUES']['Homesite_Acres'],
+        check_dict['APP_VALUES']['Road_Waste_Pond_Acres'],
+        check_dict['APP_VALUES']['CRP_Acres'],
+        check_dict['APP_VALUES']['Con25_Acres'],
+        check_dict['APP_VALUES']['Other_Use_Acres'],
+    ]
+    sum_app_total = []
+    for each in app_total:
+        try:
+            sum_app_total.append(float(each))
+        except:
+            sum_app_total.append(0)
+    check_dict['APP_VALUES']['CALCULATED_ACRES'] = sum(sum_app_total)
+
 
     # ADD COMBINED ACREAGE VALUE TO DICT
     parcel_acreage = []
