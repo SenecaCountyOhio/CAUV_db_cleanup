@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Seneca County CAUV Form</title>
+{% endblock %}
+
+{% block body %}
+<div class="form">
+  <div class="form-container-small">
+  <img src="{{ url_for('static', filename='images/SenecaCountyBWseal_CLEAR_BACKGROUND.png')}}" alt="">
+  <h1>CAUV Form</h1>
+    <p>Successfully Submitted</p>
+  <form class="" action="/app_search">
+    <input type="submit" name="submit" id="submit" value="Go Back to Search">
+  </form>
+  <div class="sign_link">
+  <a href="/logout">Log Out</a>
+  </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block head %}
+{% endblock %}
+
+{% block body %}
+<div class="form">
+  <form class="form-container-small" method="POST">
+    <img src="{{ url_for('static', filename='images/SenecaCountyBWseal_CLEAR_BACKGROUND.png')}}" alt="">
+    <h1>CAUV Form</h1>
+      <div class="flagged">
+        {{ error }}
+      </div>
+      {{form.username(class="form-control", placeholder="Username")}}
+      {{form.password(class="form-control", placeholder="Password")}}
+      <div class="submitbutton">
+        <input id="submit" type="submit" value="Sign In">
+      </div>
+    </form>
+    <div class="sign_link">
+  </div>
+</div>
+{% endblock %}
