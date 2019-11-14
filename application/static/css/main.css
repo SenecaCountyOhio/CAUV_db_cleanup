@@ -1,6 +1,5 @@
 body {
   font-family: 'Oxygen', sans-serif;
-  background-color: hsla(206, 36%, 16%, 1);
   font-size: 16px;
   text-align: center;
   display: flex;
@@ -8,11 +7,43 @@ body {
   justify-content: center;
 }
 
-img {
-  width: 100px;
-  margin-bottom: 0;
+
+.APPNUM{
+  font-size: 24px;
+  text-align: left;
 }
 
+.GENERAL_INFO{
+  display: flex;
+  text-align: left;
+  flex-direction: row;
+}
+
+.GENERAL_INFO_ITEM{
+  padding: 10px;
+  border: solid 1px black;
+  margin: 5px;
+
+}
+.ERRORS{
+  background-color: hsl(0, 78%, 68%);
+}
+
+.APP{
+}
+
+.APP table {
+  border-collapse: collapse;
+  padding: 5px;
+}
+
+.APP td {
+  border: solid 1px gray;
+}
+
+.APP th{
+  width: 200px;
+}
 .form {
   padding: 2%;
   min-width: 300px;
@@ -99,21 +130,6 @@ img {
   color: hsla(0, 0%, 41%, 1);
 }
 
-table{
-  border-collapse: collapse;
-  width: 100%;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-td {
-  text-align: center;
-  padding: 8px;
-  text-align: left;
-  max-width: 500px;
-  overflow-wrap: break-word;
-  border: 0.5px solid hsla(0, 0%, 71%, 1);
-}
 
 .flagged{
   background: hsl(0, 78%, 68%);

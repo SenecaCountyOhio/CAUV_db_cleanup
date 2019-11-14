@@ -4,79 +4,65 @@
 {% endblock %}
 
 {% block body %}
-<div class="form">
-  <div class="form-container-large">
-  <img src="{{ url_for('static', filename='images/SenecaCountyBWseal_CLEAR_BACKGROUND.png')}}" alt="">
-  <h1>CAUV Renewal Application Form</h1>
-  {% if new_app != None %}
-  <span class="flagged">
-    This application was last submitted on :
-    {{ new_app.date_added }}
-  </span>
-  {% endif %}
-  <p> APP#: {{ app.AG_APP }}</p>
-  <p> Total Deed Acres: {{ app.Parcels_Combined_Acres }}</p>
-    <form method="post">
-      {{ item5_dict['Parcel_Change_Check'][4] }}
-      {% for subfield in form.Parcel_Change_Check %}
-        {{ subfield(required="") }}
-        {{ subfield.label }}
-      {% endfor %}
-      <div>
-      {{ form.Parcel_Change_Note.label }}
+<div class="APPNUM">
+  <h1>
+  App # : {{ appNum }}
+  </h1>
+</div>
+<div class="GENERAL_INFO">
+  <div class="GENERAL_INFO_ITEM">
+    <h2>ERRORS</h2>
+    {% for each in data['ERRORS'] %}
+      <div class="ERRORS">
+        {{each}} : {{ data['ERRORS'][each] }}
       </div>
-      {{ form.Parcel_Change_Note }}
-      <table>
-        <tr>
-          <th colspan="2">Farmed Acres</th>
-          <th colspan="2">Use of Land (crop)</th>
-          <th colspan="2">Units/Acre</th>
-          <th colspan="2">Price/Unit</th>
-          <th colspan="2">Gross Income</th>
-        </tr>
-        <tr>
-          <td> Previous </td>
-          <td> Current </td>
-          <td> Previous </td>
-          <td> Current </td>
-          <td> Previous </td>
-          <td> Current </td>
-          <td> Previous </td>
-          <td> Current </td>
-          <td> Previous </td>
-          <td> Current </td>
-        </tr>
-        {% for each in income_dict %}
-        <tr>
-          {% for item in income_dict[each] %}
-          <td> {{ income_dict[each][item][1] }}</td>
-          <td> {{ income_dict[each][item][3](class="form-control", value=income_dict[each][item][0]) }}</td>
-          {% endfor %}
-        </tr>
-        {% endfor %}
-      </table>
-      <table>
-        <tr>
-          <th>Anticipated land use for the current year</th>
-          <th>Previous Acres</th>
-          <th>Current Acres</th>
-        </tr>
-        {% for each in land_dict %}
-        <tr>
-          <td>{{ land_dict[each][4] }}</td>
-          <td>{{ land_dict[each][1] }}</td>
-          <td>{{ land_dict[each][3](class="form-control", value=land_dict[each][0]) }}</td>
-        </tr>
-        {% endfor %}
-      </table>
-    {{ form.submit }}
-  </form>
-  <form action="/app_search">
-    <input type="submit" name="submit" id="submit" value="Go Back to Search">
-  </form>
-    <div class="sign_link">
-      <a href="/logout">Log Out</a>
-    </div>
+    {% endfor %}
+  </div>
+  <div class="GENERAL_INFO_ITEM">
+    <h2>GIS VALUES</h2>
+    {% for each in data['GIS_VALUES'] %}
+    <table>
+      <tr>
+        <td>
+          {{each}}
+        </td>
+        <td>
+          {{ data['GIS_VALUES'][each] }}
+        </td>
+      </tr>
+    </table>
+    {% endfor %}
   </div>
 </div>
+<div class="APP">
+  <table>
+    <tr>
+      <th>TYPE</th>
+      <th>CURRENT</th>
+      <th>RECOMMENDATION</th>
+    </tr>
+    {% for each in data['APP_VALUES'] %}
+      <tr>
+        <td>
+          {{ each }}
+        </td>
+        <td>
+          {{ data['APP_VALUES'][each] }}
+        </td>
+        {% if data['RECOMMENDATION'][each] == data['APP_VALUES'][each] %}
+        <td>
+          {{  data['RECOMMENDATION'][each] }}
+        </td>
+        {% else %}
+        <td class="flagged">
+          {{  data['RECOMMENDATION'][each] }}
+        </td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+  </table>
+</div>
+<form method="post">
+  <input type="submit" name="submit" value="NEXT">
+</form>
 {% endblock %}
