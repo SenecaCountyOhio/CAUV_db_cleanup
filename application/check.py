@@ -7,7 +7,73 @@ from .models import (
     ERRORS,
 )
 
-def check(x):
+
+
+
+
+def INCOME_check(dict):
+
+    income_sum = dict['APP_VALUES']['Gross_Income_1'] + dict['APP_VALUES']['Gross_Income_2'] + dict['APP_VALUES']['Gross_Income_3']
+    if income_sum <= 2500:
+        if dict['APP_VALUES']['CALCULATED_ACRES'] < 10:
+            return 'FLAG'
+        else:
+            return ""
+    else:
+        return ""
+
+
+def NEVER_FILED_check(dict):
+    if dict['APP_VALUES']['CALCULATED_ACRES'] == 0:
+        return 'FLAG'
+    else:
+        return ""
+
+
+def CALC_V_STATED_check(dict):
+    if dict['APP_VALUES']['CALCULATED_ACRES'] != dict['APP_VALUES']['Stated_Total_Acres']:
+        return 'FLAG'
+    else:
+        return ""
+
+
+def CALC_V_DEED_check(dict):
+    if dict['APP_VALUES']['CALCULATED_ACRES'] != dict['GIS_VALUES']['Parcels_Combined_Acres']:
+        return 'FLAG'
+    else:
+        return ""
+
+
+
+def STATED_V_DEED_check(dict):
+    if dict['APP_VALUES']['Stated_Total_Acres'] != dict['GIS_VALUES']['Parcels_Combined_Acres']:
+        return 'FLAG'
+    else:
+        return ""
+
+
+def HOMESITE_check(dict):
+    if dict['APP_VALUES']['Homesite_Acres'] != dict['GIS_VALUES']['HOMESITE']:
+        return 'FLAG'
+    else:
+        return ""
+
+
+def CON25_check(dict):
+    if dict['APP_VALUES']['Con25_Acres'] != dict['GIS_VALUES']['CON25']:
+        return 'FLAG'
+    else:
+        return ""
+
+
+def CRP_check(dict):
+    if dict['APP_VALUES']['CRP_Acres'] != dict['GIS_VALUES']['CRP']:
+        return 'FLAG'
+    else:
+        return ""
+
+
+def app_view(x):
     check_dict = {
         'APP_VALUES': {
             'Commodity_Acres': None,
@@ -28,12 +94,12 @@ def check(x):
         },
         'GIS_VALUES': {
             'Parcels_Combined_Acres': None,
-            'Homesite': None,
+            'HOMESITE': None,
             'CRP': None,
             'CON25': None,
         },
         'ERRORS': {
-            'never_filed': None,
+            'NEVER_FILED': None,
             'DEED': None,
             'STATED': None,
             'HOMESITE': None,
@@ -52,24 +118,35 @@ def check(x):
 
 
     # ADD CAUV APP VALUES TO DICT
-    check_dict['APP_VALUES']['Commodity_Acres'] = model_CAUVApp.Commodity_Acres
-    check_dict['APP_VALUES']['Hay_Acres'] = model_CAUVApp.Hay_Acres
-    check_dict['APP_VALUES']['Perm_Pasture_Acres'] = model_CAUVApp.Perm_Pasture_Acres
-    check_dict['APP_VALUES']['Noncommercial_Wood_Acres'] = model_CAUVApp.Noncommercial_Wood_Acres
-    check_dict['APP_VALUES']['Commerical_Wood_Acres'] = model_CAUVApp.Commerical_Wood_Acres
-    check_dict['APP_VALUES']['Other_Crop_Acres'] = model_CAUVApp.Other_Crop_Acres
-    check_dict['APP_VALUES']['Homesite_Acres'] = model_CAUVApp.Homesite_Acres
-    check_dict['APP_VALUES']['Road_Waste_Pond_Acres'] = model_CAUVApp.Road_Waste_Pond_Acres
-    check_dict['APP_VALUES']['CRP_Acres'] = model_CAUVApp.CRP_Acres
-    check_dict['APP_VALUES']['Con25_Acres'] = model_CAUVApp.Con25_Acres
-    check_dict['APP_VALUES']['Other_Use_Acres'] = model_CAUVApp.Other_Use_Acres
-    check_dict['APP_VALUES']['Stated_Total_Acres'] = model_CAUVApp.Stated_Total_Acres
-    check_dict['APP_VALUES']['Gross_Income_1'] = model_CAUVApp.Gross_Income_1
-    check_dict['APP_VALUES']['Gross_Income_2'] = model_CAUVApp.Gross_Income_2
-    check_dict['APP_VALUES']['Gross_Income_3'] = model_CAUVApp.Gross_Income_3
+
+    app_types = [
+        'Commodity_Acres',
+        'Hay_Acres',
+        'Perm_Pasture_Acres',
+        'Noncommercial_Wood_Acres',
+        'Commerical_Wood_Acres',
+        'Other_Crop_Acres',
+        'Homesite_Acres',
+        'Road_Waste_Pond_Acres',
+        'CRP_Acres',
+        'Con25_Acres',
+        'Other_Use_Acres',
+        'Stated_Total_Acres',
+        'Gross_Income_1',
+        'Gross_Income_2',
+        'Gross_Income_3',
+    ]
+    for each in app_types:
+        if getattr(model_CAUVApp, each) == '':
+            check_dict['APP_VALUES'][each] = 0
+        else:
+            try:
+                check_dict['APP_VALUES'][each] = float(getattr(model_CAUVApp, each))
+            except:
+                check_dict['APP_VALUES'][each] = 0
 
     # CALCULATE TOTAL SUBMITTED ACRES IN APP
-    app_total = [
+    land_values = [
         check_dict['APP_VALUES']['Commodity_Acres'],
         check_dict['APP_VALUES']['Hay_Acres'],
         check_dict['APP_VALUES']['Perm_Pasture_Acres'],
@@ -83,7 +160,7 @@ def check(x):
         check_dict['APP_VALUES']['Other_Use_Acres'],
     ]
     sum_app_total = []
-    for each in app_total:
+    for each in land_values:
         try:
             sum_app_total.append(float(each))
         except:
@@ -102,36 +179,26 @@ def check(x):
 
 
     # ADD VARIOUS GIS ACREAGE VALUES TO DICT
-    if model_Homesite is None:
-        check_dict['GIS_VALUES']['Homesite'] = '0'
-    else:
-        check_dict['GIS_VALUES']['Homesite'] = model_Homesite.HOMESITE
-    if model_CRP is None:
-        check_dict['GIS_VALUES']['CRP'] = '0'
-    else:
-        check_dict['GIS_VALUES']['CRP'] = model_CRP.CRP
-    if model_CON25 is None:
-        check_dict['GIS_VALUES']['CON25'] = '0'
-    else:
-        check_dict['GIS_VALUES']['CON25'] = model_CON25.CON25
+    GIS_types ={
+        'HOMESITE': model_Homesite,
+        'CRP': model_CRP,
+        'CON25': model_CON25,
+    }
 
+    for each in GIS_types:
+        try:
+            check_dict['GIS_VALUES'][each] = float(getattr(GIS_types[each], each))
+        except:
+            check_dict['GIS_VALUES'][each] = 0
 
     # ADD ERROR INFO TO DICT
-    if model_ERRORS is None:
-        check_dict['ERRORS']['never_filed'] = 'FALSE'
-        check_dict['ERRORS']['DEED'] = 'FALSE'
-        check_dict['ERRORS']['STATED'] = 'FALSE'
-        check_dict['ERRORS']['HOMESITE']= 'FALSE'
-        check_dict['ERRORS']['CRP'] = 'FALSE'
-        check_dict['ERRORS']['CON25'] = 'FALSE'
-        check_dict['ERRORS']['INCOME'] = 'FALSE'
-    else:
-        check_dict['ERRORS']['never_filed'] = model_ERRORS.never_filed
-        check_dict['ERRORS']['DEED'] = model_ERRORS.DEED
-        check_dict['ERRORS']['STATED'] = model_ERRORS.STATED
-        check_dict['ERRORS']['HOMESITE']= model_ERRORS.HOMESITE
-        check_dict['ERRORS']['CRP'] = model_ERRORS.CRP
-        check_dict['ERRORS']['CON25'] = model_ERRORS.CON25
-        check_dict['ERRORS']['INCOME'] = model_ERRORS.INCOME
+
+    check_dict['ERRORS']['NEVER_FILED'] = NEVER_FILED_check(check_dict)
+    check_dict['ERRORS']['DEED'] = CALC_V_DEED_check(check_dict)
+    check_dict['ERRORS']['STATED'] = CALC_V_STATED_check(check_dict)
+    check_dict['ERRORS']['HOMESITE']= HOMESITE_check(check_dict)
+    check_dict['ERRORS']['CRP'] = CRP_check(check_dict)
+    check_dict['ERRORS']['CON25'] = CON25_check(check_dict)
+    check_dict['ERRORS']['INCOME'] = INCOME_check(check_dict)
 
     return check_dict

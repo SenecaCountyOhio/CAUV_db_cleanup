@@ -124,7 +124,7 @@ class ERRORS(db.Model):
     AG_APP = db.Column(
         type_=db.String(30),
     )
-    never_filed = db.Column(
+    NEVER_FILED = db.Column(
         type_=db.String(30),
     )
     DEED = db.Column(

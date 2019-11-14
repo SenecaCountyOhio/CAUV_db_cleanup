@@ -8,9 +8,9 @@ from .models import (
     CON25,
     ERRORS,
 )
-from .check import check
+from .check import app_view
 from . import db
 
 @app.route('/<int:id>')
 def base(id):
-    return check(id)
+    return app_view(id)
