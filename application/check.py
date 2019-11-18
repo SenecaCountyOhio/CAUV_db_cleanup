@@ -26,19 +26,19 @@ def NEVER_FILED_check(dict):
         return ""
 
 def CALC_V_STATED_check(dict):
-    if round(dict['APP_VALUES']['CALCULATED_ACRES'],1) != round(dict['APP_VALUES']['Stated_Total_Acres'],1):
+    if abs(round(dict['APP_VALUES']['CALCULATED_ACRES'],1) - round(dict['APP_VALUES']['Stated_Total_Acres'],1)) >= 1:
         return 'FLAG'
     else:
         return ""
 
 def CALC_V_DEED_check(dict):
-    if round(dict['APP_VALUES']['CALCULATED_ACRES'],1) != round(dict['GIS_VALUES']['Parcels_Combined_Acres'],1):
+    if abs(round(dict['APP_VALUES']['CALCULATED_ACRES'],1) - round(dict['GIS_VALUES']['Parcels_Combined_Acres'],1)) >= 1:
         return 'FLAG'
     else:
         return ""
 
 def STATED_V_DEED_check(dict):
-    if round(dict['APP_VALUES']['Stated_Total_Acres'],1) != round(dict['GIS_VALUES']['Parcels_Combined_Acres'],1):
+    if abs(round(dict['APP_VALUES']['Stated_Total_Acres'],1) - round(dict['GIS_VALUES']['Parcels_Combined_Acres'],1)) >= 1:
         return 'FLAG'
     else:
         return ""

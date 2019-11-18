@@ -90,7 +90,6 @@ class Homesite(db.Model):
         type_=db.String(30),
     )
 
-
 class CRP(db.Model):
     id = db.Column(
         type_=db.Integer,
@@ -102,7 +101,6 @@ class CRP(db.Model):
     CRP = db.Column(
         type_=db.String(30),
     )
-
 
 class CON25(db.Model):
     id = db.Column(
