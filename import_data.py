@@ -15,21 +15,23 @@ app = create_app()
 app.app_context().push()
 
 file_list = [
-    'CAUVApps.csv',
+    'CORRECTED_CAUVApps.csv',
+    #'CAUVApps.csv',
     'Parcels.csv',
     'Homesite.csv',
     'CRP.csv',
     'CON25.csv',
-    'ERRORS.csv',
+    #'ERRORS.csv',
 ]
 
 def import_to_model(directory):
     for file in os.listdir(directory):
+        print(str(file))
         if str(file) in file_list:
             with open(directory + "\\" + str(file)) as f:
                 reader = csv.reader(f)
                 for row in reader:
-                    if str(file) == 'CAUVApps.csv':
+                    if str(file) == 'CORRECTED_CAUVApps.csv': 
                         app = CAUVApp(
                             AG_APP=row[0],
                             Commodity_Acres=row[1],
@@ -48,7 +50,7 @@ def import_to_model(directory):
                             Gross_Income_2=row[14],
                             Gross_Income_3=row[15],
                         )
-                        print('CAUVApp' + app.AG_APP)
+                        #print('CAUVApp' + app.AG_APP)
                         db.session.add(app)
                     elif str(file) == 'Parcels.csv':
                         app = Parcels(
@@ -58,31 +60,32 @@ def import_to_model(directory):
                             NAME1=row[5],
                             NAME2=row[6],
                         )
-                        print('Parcels' + app.AG_APP)
+                        #print('Parcels' + app.AG_APP)
                         db.session.add(app)
                     elif str(file) == 'Homesite.csv':
                         app = Homesite(
                             AG_APP=row[1],
                             HOMESITE=row[3],
                         )
-                        print('HOMESITE' + app.AG_APP)
+                        #print('HOMESITE' + app.AG_APP)
                         db.session.add(app)
                     elif str(file) == 'CRP.csv':
                         app = CRP(
                             AG_APP=row[1],
                             CRP=row[3],
                         )
-                        print('CRP' + app.AG_APP)
+                        #print('CRP' + app.AG_APP)
                         db.session.add(app)
                     elif str(file) == 'CON25.csv':
                         app = CON25(
                             AG_APP=row[1],
                             CON25=row[3],
                         )
-                        print('CON25' + app.AG_APP)
+                        #print('CON25' + app.AG_APP)
                         db.session.add(app)
                     else:
-                        print('NO MODEL FOR DATA')
+                        pass
+                        #print('NO MODEL FOR' + str(file))
 
                 db.session.commit()
 

@@ -238,11 +238,11 @@ def app_view(x):
     if CALC_V_DEED_check(check_dict) != "":
         check_dict['ERRORS']['DEED'] = CALC_V_DEED_check(check_dict)
 
-    if CALC_V_STATED_check(check_dict) != "":
-        check_dict['ERRORS']['STATED'] = CALC_V_STATED_check(check_dict)
+    #if CALC_V_STATED_check(check_dict) != "":
+    #    check_dict['ERRORS']['STATED'] = CALC_V_STATED_check(check_dict)
 
-    if STATED_V_DEED_check(check_dict) != "":
-        check_dict['ERRORS']['STATED_V_DEED'] = STATED_V_DEED_check(check_dict)
+    #if STATED_V_DEED_check(check_dict) != "":
+    #    check_dict['ERRORS']['STATED_V_DEED'] = STATED_V_DEED_check(check_dict)
 
     if HOMESITE_check(check_dict) != "":
         check_dict['ERRORS']['HOMESITE'] = HOMESITE_check(check_dict)
