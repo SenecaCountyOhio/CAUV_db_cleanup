@@ -12,26 +12,53 @@
 <div class="GENERAL_INFO">
   <div class="GENERAL_INFO_ITEM">
     <h2>ERRORS</h2>
-    {% for each in data['ERRORS'] %}
+    {% for each in errors %}
       <div class="ERRORS">
-        {{each}} : {{ data['ERRORS'][each] }}
+        {{each}}
       </div>
     {% endfor %}
   </div>
   <div class="GENERAL_INFO_ITEM">
     <h2>GIS VALUES</h2>
-    {% for each in data['GIS_VALUES'] %}
+    {% for each in current['GIS_VALUES'] %}
     <table>
       <tr>
         <td>
           {{each}}
         </td>
         <td>
-          {{ data['GIS_VALUES'][each] }}
+          {{ current['GIS_VALUES'][each] }}
         </td>
       </tr>
     </table>
     {% endfor %}
+  </div>
+  <div class="GENERAL_INFO_ITEM">
+    <h2>PARCELS</h2>
+    <table>
+      {% for each in AG_LAND_parcels %}
+      <tr>
+        <td>
+          {{ each['PARID'] }}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div class="GENERAL_INFO_ITEM">
+    <h2>AG LAND</h2>
+    <table>
+      {% for each in AG_LAND_land %}
+      <tr>
+        <td>
+          {{ each['LAND_USE_TYPE'] }}
+        </td>
+        <td>
+          {{ each['LAND_USE_ACRES'] }}
+        </td>
+      </tr>
+      {% endfor %}
+    </table>
   </div>
 </div>
 <div class="APP">
@@ -39,30 +66,43 @@
     <tr>
       <th>TYPE</th>
       <th>CURRENT</th>
-      <th>RECOMMENDATION</th>
     </tr>
-    {% for each in data['APP_VALUES'] %}
+    {% for each in current['APP_VALUES'] %}
       <tr>
         <td>
           {{ each }}
         </td>
         <td>
-          {{ data['APP_VALUES'][each] }}
+          {{ current['APP_VALUES'][each] }}
         </td>
-        {% if data['RECOMMENDATION'][each] == data['APP_VALUES'][each] %}
-        <td>
-          {{  data['RECOMMENDATION'][each] }}
-        </td>
-        {% else %}
-        <td class="flagged">
-          {{  data['RECOMMENDATION'][each] }}
-        </td>
-        {% endif %}
       </tr>
     {% endfor %}
+    <tr>
+      <td>TOTAL</td>
+      <td>
+        {{ current_sum }}
+      </td>
+    </tr>
+  </table>
+  <table>
+    <tr>
+      <th>RECOMMENDATION</th>
+    </tr>
+    {% for each in recommendation %}
+    <tr>
+      <td>
+          {{ recommendation[each] }}
+      </td>
+    </tr>
+    {% endfor %}
+    <tr>
+      <td>
+        {{ recommendation_sum }}
+      </td>
+    </tr>
   </table>
 </div>
 <form method="post">
-  <input type="submit" name="submit" value="NEXT">
+  <input type="submit" id="submit" name="submit" value="NEXT">
 </form>
 {% endblock %}

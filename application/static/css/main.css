@@ -30,6 +30,8 @@ body {
 }
 
 .APP{
+  display: flex;
+  flex-direction: row;
 }
 
 .APP table {
@@ -100,35 +102,8 @@ body {
   /*width: 100%;*/
   border: 2px solid hsla(0, 0%, 71%, 1);
   border-radius: 4px;
-  margin-top: 20px;
-}
-#submit:hover{
-  color: hsla(0, 0%, 41%, 1);
-  font-size: 16px;
-  background-color: hsla(0, 0%, 100%, 1);
-  padding: 12px 20px;
-  /*width: 100%;*/
-  border: 2px solid hsla(0, 0%, 41%, 1);
-  border-radius: 4px;
-  margin-top: 20px;
 }
 
-#content {
-  width: 100%;
-}
-
-.sign_link{
-  margin: auto;
-  text-align: center;
-  font-size: 12px;
-  padding: 40px;
-  padding-bottom: 0px;
-  flex-grow: 1;
-}
-
-.sign_link a{
-  color: hsla(0, 0%, 41%, 1);
-}
 
 
 .flagged{
