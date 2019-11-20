@@ -83,13 +83,15 @@ def compiled_errors(app_num, parcel_sum, AG_LAND_land, current_sum):
         errors.append(NEVER_FILED_check(app_select, current_sum))
 
     if CALC_V_STATED_check(app_select, current_sum) != "":
-        errors.append(CALC_V_STATED_check(app_select, current_sum))
+        pass
+        #errors.append(CALC_V_STATED_check(app_select, current_sum))
 
     if CALC_V_DEED_check(parcel_sum, current_sum) != "":
         errors.append(CALC_V_DEED_check(parcel_sum, current_sum))
 
     if STATED_V_DEED_check(app_select, parcel_sum) != "":
-        errors.append(STATED_V_DEED_check(app_select, parcel_sum))
+        pass
+        #errors.append(STATED_V_DEED_check(app_select, parcel_sum))
 
     for each in AG_LAND_land:
         if each['LAND_USE_TYPE'] == 'HOME':

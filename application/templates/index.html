@@ -41,8 +41,19 @@
         <td>
           {{ each['PARID'] }}
         </td>
+        <td>
+          {{ each["PARCEL_ACREAGE"]}}
+        </td>
       </tr>
       {% endfor %}
+      <tr>
+        <td>
+          Total
+        </td>
+        <td>
+          {{AG_LAND_parcel_sum}}
+        </td>
+      </tr>
     </table>
   </div>
   <div class="GENERAL_INFO_ITEM">
@@ -58,6 +69,14 @@
         </td>
       </tr>
       {% endfor %}
+      <tr>
+        <td>
+          Total
+        </td>
+        <td>
+          {{AG_LAND_land_sum}}
+        </td>
+      </tr>
     </table>
   </div>
 </div>
