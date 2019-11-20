@@ -2,11 +2,6 @@ import csv
 import os
 from application.models import (
     CAUVApp,
-    Parcels,
-    Homesite,
-    CRP,
-    CON25,
-    ERRORS,
 )
 from application import db, create_app
 

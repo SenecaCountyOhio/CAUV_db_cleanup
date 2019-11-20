@@ -2,11 +2,7 @@ from application import db, create_app
 from application.check import app_view
 from application.models import (
     CAUVApp,
-    Parcels,
-    Homesite,
-    CRP,
-    CON25,
-    ERRORS,
+    RECOMMENDED_CAUVApp,
 )
 
 app = create_app()

@@ -1,10 +1,5 @@
 from .models import (
     CAUVApp,
-    Parcels,
-    Homesite,
-    CRP,
-    CON25,
-    ERRORS,
 )
 
 def INCOME_check(app_select, parcel_sum):
@@ -71,10 +66,9 @@ def CON25_check(app_select, CON25_record):
     else:
         return ""
 
-
-def compiled_errors(app_num, parcel_sum, AG_LAND_land, current_sum):
+def compiled_errors(app_select, parcel_sum, AG_LAND_land, current_sum):
     errors = []
-    app_select = CAUVApp.query.filter(CAUVApp.AG_APP == app_num).first()
+    #app_select = CAUVApp.query.filter(CAUVApp.AG_APP == app_num).first()
 
     if INCOME_check(app_select, parcel_sum) != "":
         errors.append(INCOME_check(app_select, parcel_sum))

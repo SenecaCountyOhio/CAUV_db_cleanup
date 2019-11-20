@@ -5,8 +5,7 @@ from .models import (
 
 
 
-def recommendation(app_num, AG_LAND_parcel, AG_LAND_land, errors):
-    app_select = CAUVApp.query.filter(CAUVApp.AG_APP == app_num).first()
+def recommendation(app_select, AG_LAND_parcel, AG_LAND_land, errors):
     # BASE DATA MODEL FOR RECOMMENDED VALUES
     recommendation_values = {
         'Commodity_Acres': app_select.Commodity_Acres,
@@ -26,53 +25,66 @@ def recommendation(app_num, AG_LAND_parcel, AG_LAND_land, errors):
         'Gross_Income_3': app_select.Gross_Income_3,
     }
     # ADJUST HOME, CONP, CON25 IF NECESSARY
-    diffs = []
-    road_final = []
     temp_adjust = {
-            'Homesite_Acres': app_select.Homesite_Acres,
-            'Road_Waste_Pond_Acres': app_select.Road_Waste_Pond_Acres,
-            'CRP_Acres': app_select.CRP_Acres,
-            'Con25_Acres': app_select.Con25_Acres,
+        'Commodity_Acres': app_select.Commodity_Acres,
+        'Hay_Acres': app_select.Hay_Acres,
+        'Perm_Pasture_Acres': app_select.Perm_Pasture_Acres,
+        'Noncommercial_Wood_Acres': app_select.Noncommercial_Wood_Acres,
+        'Commerical_Wood_Acres': app_select.Commerical_Wood_Acres,
+        'Homesite_Acres': app_select.Homesite_Acres,
+        'Other_Crop_Acres': app_select.Other_Crop_Acres,
+        'Road_Waste_Pond_Acres': app_select.Road_Waste_Pond_Acres,
+        'CRP_Acres': app_select.CRP_Acres,
+        'Con25_Acres': app_select.Con25_Acres,
     }
+    # FIRST ADJUST HOME, CRP, CON25
+    road_final = []
     for each in AG_LAND_land:
         if each['LAND_USE_TYPE'] == 'HOME':
-            if "HOMESITE DOES NOT EQUAL AG LAND" in errors:
-                homesite_diff = app_select.Homesite_Acres - each['LAND_USE_ACRES']
-                diffs.append(homesite_diff)
-                temp_adjust['Homesite_Acres'] = each['LAND_USE_ACRES']
-            else:
-                pass
+            temp_adjust['Homesite_Acres'] = each['LAND_USE_ACRES']
 
         elif each['LAND_USE_TYPE'] == 'CONP':
-            if 'CRP DOES NOT EQUAL AG LAND' in errors:
-                CRP_diff = app_select.CRP_Acres - each['LAND_USE_ACRES']
-                diffs.append(CRP_diff)
-                temp_adjust['CRP_Acres'] = each['LAND_USE_ACRES']
-            else:
-                pass
+            temp_adjust['CRP_Acres'] = each['LAND_USE_ACRES']
 
         elif each['LAND_USE_TYPE'] == 'CON25':
-            if 'CON25 DOES NOT EQUAL AG LAND' in errors:
-                CON25_diff = app_select.Con25_Acres - each['LAND_USE_ACRES']
-                diffs.append(CON25_diff)
-                temp_adjust['Con25_Acres'] = each['LAND_USE_ACRES']
-            else:
-                pass
+            temp_adjust['Con25_Acres'] = each['LAND_USE_ACRES']
+
+        elif each['LAND_USE_TYPE'] == 'CROP':
+            temp_adjust['Commodity_Acres'] = (
+                each['LAND_USE_ACRES'] -
+                app_select.Hay_Acres -
+                app_select.Perm_Pasture_Acres -
+                app_select.Other_Crop_Acres
+            )
+        elif each['LAND_USE_TYPE'] == 'WOOD':
+            temp_adjust['Noncommercial_Wood_Acres'] = (
+                each['LAND_USE_ACRES'] -
+                app_select.Commerical_Wood_Acres
+            )
+        elif each['LAND_USE_TYPE'] == 'ROW':
+                road_final.append(each['LAND_USE_ACRES'])
+
+        elif each['LAND_USE_TYPE'] == 'DTCH':
+                road_final.append(each['LAND_USE_ACRES'])
+
+        elif each['LAND_USE_TYPE'] == 'WSTE':
+                road_final.append(each['LAND_USE_ACRES'])
+
         else:
             pass
 
-    #if round(sum(road_final) - app_select.Road_Waste_Pond_Acres,3) >= 0:
-    road_final = round(app_select.Road_Waste_Pond_Acres + sum(diffs),3)
-    if road_final >= 0:
-        recommendation_values['Road_Waste_Pond_Acres'] = road_final
-        recommendation_values['Homesite_Acres'] = temp_adjust['Homesite_Acres']
-        recommendation_values['CRP_Acres'] = temp_adjust['CRP_Acres']
-        recommendation_values['Con25_Acres'] = temp_adjust['Con25_Acres']
-    else:
-        pass
-
+    temp_adjust['Road_Waste_Pond_Acres'] = round(sum(road_final),3)
+    recommendation_values['Commodity_Acres'] = temp_adjust['Commodity_Acres']
+    recommendation_values['Hay_Acres'] = temp_adjust['Hay_Acres']
+    recommendation_values['Perm_Pasture_Acres'] = temp_adjust['Perm_Pasture_Acres']
+    recommendation_values['Noncommercial_Wood_Acres'] = temp_adjust['Noncommercial_Wood_Acres']
+    recommendation_values['Commerical_Wood_Acres'] = temp_adjust['Commerical_Wood_Acres']
+    recommendation_values['Other_Crop_Acres'] = temp_adjust['Other_Crop_Acres']
+    recommendation_values['Road_Waste_Pond_Acres'] = temp_adjust['Road_Waste_Pond_Acres']
+    recommendation_values['Homesite_Acres'] = temp_adjust['Homesite_Acres']
+    recommendation_values['CRP_Acres'] = temp_adjust['CRP_Acres']
+    recommendation_values['Con25_Acres'] = temp_adjust['Con25_Acres']
     return recommendation_values
-
 
 
 def recommendation_sum(recommendation_values):
@@ -81,6 +93,7 @@ def recommendation_sum(recommendation_values):
         app_select['Commodity_Acres'],
         app_select['Hay_Acres'],
         app_select['Noncommercial_Wood_Acres'],
+        app_select['Perm_Pasture_Acres'],
         app_select['Commerical_Wood_Acres'],
         app_select['Other_Crop_Acres'],
         app_select['Homesite_Acres'],

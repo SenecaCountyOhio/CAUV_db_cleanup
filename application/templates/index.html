@@ -19,18 +19,11 @@
     {% endfor %}
   </div>
   <div class="GENERAL_INFO_ITEM">
-    <h2>GIS VALUES</h2>
-    {% for each in current['GIS_VALUES'] %}
-    <table>
-      <tr>
-        <td>
-          {{each}}
-        </td>
-        <td>
-          {{ current['GIS_VALUES'][each] }}
-        </td>
-      </tr>
-    </table>
+    <h2>RECOMMENDATION ERRORS</h2>
+    {% for each in recommendation_errors %}
+      <div class="">
+        {{each}}
+      </div>
     {% endfor %}
   </div>
   <div class="GENERAL_INFO_ITEM">
@@ -119,6 +112,18 @@
         {{ recommendation_sum }}
       </td>
     </tr>
+  </table>
+  <table>
+    <tr>
+      <th>RECO_MODEL_VIEW</th>
+    </tr>
+    {% for each in recommended['APP_VALUES'] %}
+    <tr>
+      <td>
+          {{ recommended['APP_VALUES'][each] }}
+      </td>
+    </tr>
+    {% endfor %}
   </table>
 </div>
 <form method="post">

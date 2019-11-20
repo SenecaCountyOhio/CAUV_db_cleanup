@@ -1,17 +1,13 @@
 from .models import (
     CAUVApp,
-    Parcels,
-    Homesite,
-    CRP,
-    CON25,
-    ERRORS,
 )
 
-def current_app_sum(app_num):
-    app_select = CAUVApp.query.filter(CAUVApp.AG_APP == app_num).first()
+def current_app_sum(app_select):
+    #app_select = CAUVApp.query.filter(CAUVApp.AG_APP == app_num).first()
     app_sum = [
         app_select.Commodity_Acres,
         app_select.Hay_Acres,
+        app_select.Perm_Pasture_Acres,
         app_select.Noncommercial_Wood_Acres,
         app_select.Commerical_Wood_Acres,
         app_select.Other_Crop_Acres,
@@ -23,8 +19,8 @@ def current_app_sum(app_num):
     ]
     return round(sum(app_sum),3)
 
-def current_app(app_num):
-    app_select = CAUVApp.query.filter(CAUVApp.AG_APP == app_num).first()
+def current_app(app_select):
+    #app_select = CAUVApp.query.filter(CAUVApp.AG_APP == app_num).first()
     check_dict = {
         'APP_VALUES': {
             'Commodity_Acres': app_select.Commodity_Acres,
@@ -42,13 +38,6 @@ def current_app(app_num):
             'Gross_Income_1': app_select.Gross_Income_1,
             'Gross_Income_2': app_select.Gross_Income_2,
             'Gross_Income_3': app_select.Gross_Income_3,
-        },
-        'GIS_VALUES': {
-            'Parcels_Combined_Acres': None,
-            'HOMESITE': None,
-            'CRP': None,
-            'CON25': None,
         }
     }
-
     return check_dict
