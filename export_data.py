@@ -1,22 +1,36 @@
 import csv
 import os
+import sys
+from application import db, create_app
 from application.models import (
     CAUVApp,
+    RECOMMENDED_CAUVApp,
 )
-from application import db, create_app
+from application.AG_LAND import (
+    parcel_view,
+    parcel_sum,
+    land_view,
+    land_sum,
+)
+from application.ERRORS import compiled_errors
+from application.RECOMMENDATION import recommendation, recommendation_sum
+from application.CURRENT import current_app, current_app_sum
+
 
 app = create_app()
 app.app_context().push()
 
 def export_to_csv(directory):
     with open(
-        directory + "\\" + "CORRECTED_CAUVApps.csv",
+        directory + "\\" + str(sys.argv[1]) + ".csv",
         'w',
         newline=""
     ) as f:
-        all_apps = db.session.query(CAUVApp)
+        all_apps = db.session.query(RECOMMENDED_CAUVApp)
         fieldnames = [
             'AG_APP',
+            'TOTAL PARCEL ACRES',
+            'TOTAL AGLAND ACRES',
             'Commodity_Acres',
             'Hay_Acres',
             'Perm_Pasture_Acres',
@@ -32,12 +46,27 @@ def export_to_csv(directory):
             'Gross_Income_1',
             'Gross_Income_2',
             'Gross_Income_3',
+            'NOTE',
         ]
         writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
         for each in all_apps:
+            id = each.AG_APP
+            parcel_list = parcel_view(id)
+            parcel_list_sum = parcel_sum(parcel_list)
+            land_list = land_view(id)
+            land_list_sum = land_sum(land_list)
+            errors_compiled = compiled_errors(
+                app_select=each,
+                parcel_sum=parcel_list_sum,
+                AG_LAND_land=land_list,
+                current_sum=current_app_sum(each)
+            )
             writer.writerow(
                 {
                     'AG_APP': each.AG_APP,
+                    'TOTAL PARCEL ACRES': parcel_list_sum,
+                    'TOTAL AGLAND ACRES': land_list_sum,
                     'Commodity_Acres': each.Commodity_Acres,
                     'Hay_Acres': each.Hay_Acres,
                     'Perm_Pasture_Acres': each.Perm_Pasture_Acres,
@@ -53,6 +82,7 @@ def export_to_csv(directory):
                     'Gross_Income_1': each.Gross_Income_1,
                     'Gross_Income_2': each.Gross_Income_2,
                     'Gross_Income_3': each.Gross_Income_3,
+                    'NOTE': errors_compiled
                 }
             )
             print(each.AG_APP)

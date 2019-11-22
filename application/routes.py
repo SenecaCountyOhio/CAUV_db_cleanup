@@ -54,10 +54,10 @@ def base(id):
                 current_sum=app_recommendation_sum,
             )
             recommended = current_app(recom_app_select)
-            if len(errors_compiled) == 0:
-                return redirect('/' + str(next_id))
-            if len(recommendation_errors) == 0:
-                return redirect('/' + str(next_id))
+            #if len(errors_compiled) == 0:
+            #    return redirect('/' + str(next_id))
+            #if len(recommendation_errors) == 0:
+            #    return redirect('/' + str(next_id))
             #if 'APPLICATION NEVER FILED' in errors_compiled:
             #    return redirect('/' + str(next_id))
             return render_template(

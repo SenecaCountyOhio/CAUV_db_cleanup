@@ -40,40 +40,91 @@ def recommendation(app_select, AG_LAND_parcel, AG_LAND_land, errors):
     # FIRST ADJUST HOME, CRP, CON25
     road_final = []
     for each in AG_LAND_land:
-        if each['LAND_USE_TYPE'] == 'HOME':
-            temp_adjust['Homesite_Acres'] = each['LAND_USE_ACRES']
+        if len(errors) == 0:
+            continue
+        else:
+            if each['LAND_USE_TYPE'] == 'HOME':
+                temp_adjust['Homesite_Acres'] = each['LAND_USE_ACRES']
 
-        elif each['LAND_USE_TYPE'] == 'CONP':
-            temp_adjust['CRP_Acres'] = each['LAND_USE_ACRES']
+            elif each['LAND_USE_TYPE'] == 'CONP':
+                temp_adjust['CRP_Acres'] = each['LAND_USE_ACRES']
 
-        elif each['LAND_USE_TYPE'] == 'CON25':
-            temp_adjust['Con25_Acres'] = each['LAND_USE_ACRES']
+            elif each['LAND_USE_TYPE'] == 'CON25':
+                temp_adjust['Con25_Acres'] = each['LAND_USE_ACRES']
 
-        elif each['LAND_USE_TYPE'] == 'CROP':
-            temp_adjust['Commodity_Acres'] = (
+            elif each['LAND_USE_TYPE'] == 'CROP':
+                adjust = (
                 each['LAND_USE_ACRES'] -
                 app_select.Hay_Acres -
                 app_select.Perm_Pasture_Acres -
-                app_select.Other_Crop_Acres
-            )
-        elif each['LAND_USE_TYPE'] == 'WOOD':
-            temp_adjust['Noncommercial_Wood_Acres'] = (
+                app_select.Other_Crop_Acres -
+                app_select.Other_Use_Acres
+                )
+                if adjust < 0:
+                    temp_adjust['Commodity_Acres'] = 0
+                    hay_adjust = app_select.Hay_Acres + adjust
+                    if hay_adjust < 0:
+                        temp_adjust['Hay_Acres'] = 0
+                        perm_pasture_adjust = app_select.Perm_Pasture_Acres + adjust
+                        if perm_pasture_adjust < 0:
+                            temp_adjust['Perm_Pasture_Acres'] = 0
+                            other_crop_adjust = app_select.Other_Crop_Acres + adjust
+                            if other_crop_adjust < 0:
+                                temp_adjust['Other_Crop_Acres'] = 0
+                                other_use_adjust = app_select.Other_Use_Acres + adjust
+                                if other_use_adjust <0:
+                                    temp_adjust['Other_Use_Acres'] = 0
+                                else:
+                                    temp_adjust['Other_Use_Acres'] = other_use_adjust
+                            else:
+                                temp_adjust['Other_Crop_Acres'] = other_crop_adjust
+                        else:
+                            temp_adjust['Perm_Pasture_Acres'] = perm_pasture_adjust
+                    else:
+                        temp_adjust['Hay_Acres'] = hay_adjust
+                else:
+                    temp_adjust['Commodity_Acres'] = adjust
+
+            elif each['LAND_USE_TYPE'] == 'WOOD':
+                adjust = (
                 each['LAND_USE_ACRES'] -
                 app_select.Commerical_Wood_Acres
-            )
-        elif each['LAND_USE_TYPE'] == 'ROW':
-                road_final.append(each['LAND_USE_ACRES'])
+                )
+                if adjust < 0:
+                    temp_adjust['Noncommercial_Wood_Acres'] = 0
+                    commercial_adjust = app_select.Commerical_Wood_Acres + adjust
+                    if commercial_adjust < 0:
+                        temp_adjust['Commerical_Wood_Acres'] = 0
+                    else:
+                        temp_adjust['Commerical_Wood_Acres'] = commercial_adjust
+                else:
+                    temp_adjust['Noncommercial_Wood_Acres'] = adjust
 
-        elif each['LAND_USE_TYPE'] == 'DTCH':
-                road_final.append(each['LAND_USE_ACRES'])
+            elif each['LAND_USE_TYPE'] == 'ROW':
+                    road_final.append(each['LAND_USE_ACRES'])
 
-        elif each['LAND_USE_TYPE'] == 'WSTE':
-                road_final.append(each['LAND_USE_ACRES'])
+            elif each['LAND_USE_TYPE'] == 'DTCH':
+                    road_final.append(each['LAND_USE_ACRES'])
 
-        else:
-            pass
+            elif each['LAND_USE_TYPE'] == 'WSTE':
+                    road_final.append(each['LAND_USE_ACRES'])
 
-    temp_adjust['Road_Waste_Pond_Acres'] = round(sum(road_final),3)
+            else:
+                pass
+
+            temp_adjust['Road_Waste_Pond_Acres'] = round(sum(road_final),3)
+
+            # double check there should be no values if not in ag_land
+            all_land_types = []
+            for each in AG_LAND_land:
+                all_land_types.append(each['LAND_USE_TYPE'])
+            if 'HOME' not in all_land_types:
+                temp_adjust['Homesite_Acres'] = 0
+            if 'CONP' not in all_land_types:
+                temp_adjust['CRP_Acres'] = 0
+            if 'CON25' not in all_land_types:
+                temp_adjust['Con25_Acres'] = 0
+
     recommendation_values['Commodity_Acres'] = temp_adjust['Commodity_Acres']
     recommendation_values['Hay_Acres'] = temp_adjust['Hay_Acres']
     recommendation_values['Perm_Pasture_Acres'] = temp_adjust['Perm_Pasture_Acres']
